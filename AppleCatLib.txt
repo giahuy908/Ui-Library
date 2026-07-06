@@ -1,0 +1,1633 @@
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local CoreGui = game:GetService("CoreGui")
+local TextService = game:GetService("TextService")
+
+local LocalPlayer = Players.LocalPlayer
+local Mouse = LocalPlayer:GetMouse()
+
+local AppleCatLibrary = {
+    Themes = {
+        Dark = {
+            Background = Color3.fromRGB(15, 15, 18),
+            Sidebar = Color3.fromRGB(22, 22, 26),
+            Content = Color3.fromRGB(18, 18, 22),
+            Accent = Color3.fromRGB(255, 105, 180),
+            AccentLight = Color3.fromRGB(255, 182, 193),
+            Text = Color3.fromRGB(243, 244, 246),
+            TextMuted = Color3.fromRGB(156, 163, 175),
+            Border = Color3.fromRGB(31, 41, 55),
+            Element = Color3.fromRGB(28, 28, 35),
+            ElementHover = Color3.fromRGB(35, 35, 45)
+        },
+        Light = {
+            Background = Color3.fromRGB(243, 244, 246),
+            Sidebar = Color3.fromRGB(255, 255, 255),
+            Content = Color3.fromRGB(249, 250, 251),
+            Accent = Color3.fromRGB(219, 39, 119),
+            AccentLight = Color3.fromRGB(244, 114, 182),
+            Text = Color3.fromRGB(17, 24, 39),
+            TextMuted = Color3.fromRGB(107, 114, 128),
+            Border = Color3.fromRGB(229, 231, 235),
+            Element = Color3.fromRGB(255, 255, 255),
+            ElementHover = Color3.fromRGB(243, 244, 246)
+        },
+        CyberCat = {
+            Background = Color3.fromRGB(10, 10, 14),
+            Sidebar = Color3.fromRGB(16, 12, 24),
+            Content = Color3.fromRGB(12, 8, 18),
+            Accent = Color3.fromRGB(0, 255, 204),
+            AccentLight = Color3.fromRGB(255, 0, 127),
+            Text = Color3.fromRGB(255, 255, 255),
+            TextMuted = Color3.fromRGB(139, 92, 246),
+            Border = Color3.fromRGB(45, 15, 55),
+            Element = Color3.fromRGB(22, 14, 33),
+            ElementHover = Color3.fromRGB(33, 18, 48)
+        },
+        Sakura = {
+            Background = Color3.fromRGB(28, 18, 22),
+            Sidebar = Color3.fromRGB(38, 24, 30),
+            Content = Color3.fromRGB(33, 21, 26),
+            Accent = Color3.fromRGB(255, 150, 180),
+            AccentLight = Color3.fromRGB(255, 200, 215),
+            Text = Color3.fromRGB(255, 240, 245),
+            TextMuted = Color3.fromRGB(180, 140, 150),
+            Border = Color3.fromRGB(58, 34, 44),
+            Element = Color3.fromRGB(48, 30, 38),
+            ElementHover = Color3.fromRGB(58, 38, 48)
+        }
+    },
+    Icons = {
+        ["accessibility"] = "rbxassetid://10709751939",
+        ["activity"] = "rbxassetid://10709752035",
+        ["alarmclock"] = "rbxassetid://10709752630",
+        ["alertcircle"] = "rbxassetid://10709752996",
+        ["alerttriangle"] = "rbxassetid://10709753149",
+        ["anchor"] = "rbxassetid://10709761530",
+        ["apple"] = "rbxassetid://10709761889",
+        ["bell"] = "rbxassetid://10709775704",
+        ["bomb"] = "rbxassetid://10709781460",
+        ["book"] = "rbxassetid://10709781824",
+        ["bookmark"] = "rbxassetid://10709782154",
+        ["bot"] = "rbxassetid://10709782230",
+        ["brush"] = "rbxassetid://10709782758",
+        ["calculator"] = "rbxassetid://10709783311",
+        ["calendar"] = "rbxassetid://10709789505",
+        ["camera"] = "rbxassetid://10709789686",
+        ["check"] = "rbxassetid://10709790644",
+        ["checkcircle"] = "rbxassetid://10709790387",
+        ["chevronleft"] = "rbxassetid://10709791281",
+        ["chevronright"] = "rbxassetid://10709791437",
+        ["circle"] = "rbxassetid://10709798174",
+        ["clipboard"] = "rbxassetid://10709799288",
+        ["clock"] = "rbxassetid://10709805144",
+        ["code"] = "rbxassetid://10709810463",
+        ["coffee"] = "rbxassetid://10709810814",
+        ["cog"] = "rbxassetid://10709810948",
+        ["crown"] = "rbxassetid://10709818626",
+        ["database"] = "rbxassetid://10709818996",
+        ["eye"] = "rbxassetid://10723346959",
+        ["eyeoff"] = "rbxassetid://10723346871",
+        ["file"] = "rbxassetid://10723374641",
+        ["folder"] = "rbxassetid://10723387563",
+        ["gamepad"] = "rbxassetid://10723395457",
+        ["gem"] = "rbxassetid://10723396000",
+        ["ghost"] = "rbxassetid://10723396107",
+        ["gift"] = "rbxassetid://10723396402",
+        ["globe"] = "rbxassetid://10723404337",
+        ["heart"] = "rbxassetid://10723406885",
+        ["home"] = "rbxassetid://10723407389",
+        ["info"] = "rbxassetid://10723415903",
+        ["key"] = "rbxassetid://10723416652",
+        ["laptop"] = "rbxassetid://10723423881",
+        ["lock"] = "rbxassetid://10723434711",
+        ["mail"] = "rbxassetid://10734885430",
+        ["map"] = "rbxassetid://10734886202",
+        ["menu"] = "rbxassetid://10734887784",
+        ["mic"] = "rbxassetid://10734888864",
+        ["monitor"] = "rbxassetid://10734896881",
+        ["moon"] = "rbxassetid://10734897102",
+        ["mouse"] = "rbxassetid://10734898592",
+        ["music"] = "rbxassetid://10734905958",
+        ["package"] = "rbxassetid://10734909540",
+        ["play"] = "rbxassetid://10734923549",
+        ["plus"] = "rbxassetid://10734924532",
+        ["rocket"] = "rbxassetid://10734934585",
+        ["save"] = "rbxassetid://10734941499",
+        ["search"] = "rbxassetid://10734943674",
+        ["settings"] = "rbxassetid://10734950309",
+        ["sword"] = "rbxassetid://10734975486",
+        ["trash"] = "rbxassetid://10747362393",
+        ["user"] = "rbxassetid://10747373176",
+        ["users"] = "rbxassetid://10747373426",
+        ["wifi"] = "rbxassetid://10747381992"
+    },
+    CurrentTheme = "Dark",
+    CreatedGUIs = {},
+    Signals = {}
+}
+
+local function GetCorrectImageAsset(assetString)
+    if type(assetString) == "string" then
+        -- Kiểm tra nếu chuỗi đầu vào là tên icon viết tắt được lưu trữ trong AppleCatLibrary.Icons
+        if AppleCatLibrary.Icons[assetString:lower()] then
+            assetString = AppleCatLibrary.Icons[assetString:lower()]
+        end
+        local id = assetString:match("%d+")
+        if id then
+            return "rbxthumb://type=Asset&id=" .. id .. "&w=420&h=420"
+        end
+    elseif type(assetString) == "number" then
+        return "rbxthumb://type=Asset&id=" .. tostring(assetString) .. "&w=420&h=420"
+    end
+    return assetString
+end
+
+local function CreateInstance(className, properties)
+    local instance = Instance.new(className)
+    for k, v in pairs(properties) do
+        if k ~= "Parent" then
+            if (k == "Image" or k == "HoverImage" or k == "PressedImage") then
+                instance[k] = GetCorrectImageAsset(v)
+            else
+                instance[k] = v
+            end
+        end
+    end
+    if properties.Parent then
+        instance.Parent = properties.Parent
+    end
+    return instance
+end
+
+local function GetThemeColor(name)
+    local theme = AppleCatLibrary.Themes[AppleCatLibrary.CurrentTheme] or AppleCatLibrary.Themes.Dark
+    return theme[name]
+end
+
+local function PlayTween(instance, duration, style, direction, properties)
+    local tweenInfo = TweenInfo.new(duration, style, direction)
+    local tween = TweenService:Create(instance, tweenInfo, properties)
+    tween:Play()
+    return tween
+end
+
+local function MakeDraggable(dragFrame, parentFrame)
+    local dragging = false
+    local dragInput, dragStart, startPos
+
+    local function update(input)
+        local delta = input.Position - dragStart
+        parentFrame.Position = UDim2.new(
+            startPos.X.Scale,
+            startPos.X.Offset + delta.X,
+            startPos.Y.Scale,
+            startPos.Y.Offset + delta.Y
+        )
+    end
+
+    dragFrame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = parentFrame.Position
+
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+
+    dragFrame.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            update(input)
+        end
+    end)
+end
+
+function AppleCatLibrary:Notify(config)
+    config = config or {}
+    local title = config.Title or "AppleCat Notify"
+    local desc = config.Content or "Hệ thống AppleCat đã sẵn sàng!"
+    local duration = config.Duration or 3
+    local styleColor = config.Color or GetThemeColor("Accent")
+
+    local notifyGui = CoreGui:FindFirstChild("AppleCat_Notifications")
+    if not notifyGui then
+        notifyGui = CreateInstance("ScreenGui", {
+            Name = "AppleCat_Notifications",
+            Parent = CoreGui,
+            ResetOnSpawn = false
+        })
+    end
+
+    local container = notifyGui:FindFirstChild("NotifyHolder")
+    if not container then
+        container = CreateInstance("Frame", {
+            Name = "NotifyHolder",
+            Size = UDim2.new(0, 300, 1, -40),
+            Position = UDim2.new(1, -320, 0, 20),
+            BackgroundTransparency = 1,
+            Parent = notifyGui
+        })
+        local listLayout = CreateInstance("UIListLayout", {
+            Parent = container,
+            SortOrder = Enum.SortOrder.LayoutOrder,
+            Padding = UDim.new(0, 10),
+            VerticalAlignment = Enum.VerticalAlignment.Bottom
+        })
+    end
+
+    local notifyBox = CreateInstance("CanvasGroup", {
+        Size = UDim2.new(1, 0, 0, 0),
+        BackgroundTransparency = 1,
+        Parent = container,
+        GroupTransparency = 1
+    })
+
+    local border = CreateInstance("UIStroke", {
+        Thickness = 1.5,
+        Color = GetThemeColor("Border"),
+        ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+        Parent = notifyBox
+    })
+
+    local bg = CreateInstance("Frame", {
+        Size = UDim2.new(1, 0, 1, 0),
+        BackgroundColor3 = GetThemeColor("Background"),
+        BorderSizePixel = 0,
+        Parent = notifyBox
+    })
+
+    local corner = CreateInstance("UICorner", {
+        CornerRadius = UDim.new(0, 8),
+        Parent = bg
+    })
+    CreateInstance("UICorner", {
+        CornerRadius = UDim.new(0, 8),
+        Parent = notifyBox
+    })
+
+    local accentLine = CreateInstance("Frame", {
+        Size = UDim2.new(0, 4, 1, 0),
+        Position = UDim2.new(0, 0, 0, 0),
+        BackgroundColor3 = styleColor,
+        BorderSizePixel = 0,
+        Parent = notifyBox
+    })
+
+    local titleLbl = CreateInstance("TextLabel", {
+        Size = UDim2.new(1, -40, 0, 20),
+        Position = UDim2.new(0, 15, 0, 10),
+        BackgroundTransparency = 1,
+        Text = title,
+        TextColor3 = GetThemeColor("Text"),
+        Font = Enum.Font.GothamBold,
+        TextSize = 13,
+        TextXAlignment = Enum.TextXAlignment.Left,
+        Parent = notifyBox
+    })
+
+    local descLbl = CreateInstance("TextLabel", {
+        Size = UDim2.new(1, -30, 0, 0),
+        Position = UDim2.new(0, 15, 0, 30),
+        BackgroundTransparency = 1,
+        Text = desc,
+        TextColor3 = GetThemeColor("TextMuted"),
+        Font = Enum.Font.Gotham,
+        TextSize = 11,
+        TextWrapped = true,
+        TextXAlignment = Enum.TextXAlignment.Left,
+        TextYAlignment = Enum.TextYAlignment.Top,
+        Parent = notifyBox
+    })
+
+    local textHeight = TextService:GetTextSize(desc, 11, Enum.Font.Gotham, Vector2.new(270, 1000)).Y
+    local finalHeight = math.clamp(textHeight + 45, 60, 150)
+
+    PlayTween(notifyBox, 0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out, {
+        Size = UDim2.new(1, 0, 0, finalHeight),
+        GroupTransparency = 0
+    })
+
+    task.delay(duration, function()
+        local closeTween = PlayTween(notifyBox, 0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, {
+            Size = UDim2.new(1, 0, 0, 0),
+            GroupTransparency = 1
+        })
+        closeTween.Completed:Wait()
+        notifyBox:Destroy()
+    end)
+end
+
+function AppleCatLibrary:CreateWindow(config)
+    config = config or {}
+    local title = config.Title or "AppleCat Hub"
+    local size = config.Size or UDim2.fromOffset(580, 440)
+    local defaultTheme = config.Theme or "Dark"
+    local logoId = config.Logo or "rbxassetid://124862059676525"
+    local toggleKey = config.ToggleKey or Enum.KeyCode.RightShift -- Phím tắt ẩn/hiện mặc định
+    
+    AppleCatLibrary.CurrentTheme = defaultTheme
+
+    local currentGui = CoreGui:FindFirstChild("AppleCat_UI")
+    if currentGui then
+        currentGui:Destroy()
+    end
+
+    local mainGui = CreateInstance("ScreenGui", {
+        Name = "AppleCat_UI",
+        Parent = CoreGui,
+        ResetOnSpawn = false
+    })
+
+    -- [TÍNH NĂNG MỚI] Tạo nút nổi bật/tắt (Floating Toggle Button)
+    local toggleButton = CreateInstance("ImageButton", {
+        Name = "ToggleButton",
+        Size = UDim2.fromOffset(50, 50),
+        Position = UDim2.new(0, 20, 0.5, -25), -- Nằm bên trái giữa màn hình làm vị trí khởi tạo
+        BackgroundColor3 = GetThemeColor("Sidebar"),
+        Image = "rbxassetid://124862059676525",
+        Visible = true,
+        ZIndex = 200000,
+        Parent = mainGui
+    })
+
+    local toggleButtonCorner = CreateInstance("UICorner", {
+        CornerRadius = UDim.new(1, 0), -- Biến nút thành hình tròn
+        Parent = toggleButton
+    })
+
+    local toggleButtonStroke = CreateInstance("UIStroke", {
+        Thickness = 2,
+        Color = GetThemeColor("Accent"),
+        ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+        Parent = toggleButton
+    })
+
+    -- Giúp nút nổi cũng có thể kéo thả
+    MakeDraggable(toggleButton, toggleButton)
+
+    local intro = CreateInstance("Frame", {
+        Size = UDim2.new(1, 0, 1, 0),
+        BackgroundColor3 = Color3.fromRGB(12, 10, 15),
+        ZIndex = 99999,
+        Parent = mainGui
+    })
+
+    local logoImg = CreateInstance("ImageLabel", {
+        Size = UDim2.fromOffset(120, 120),
+        Position = UDim2.new(0.5, -60, 0.4, -60),
+        BackgroundTransparency = 1,
+        Image = logoId,
+        ImageTransparency = 1,
+        ZIndex = 100000,
+        Parent = intro
+    })
+
+    local introTitle = CreateInstance("TextLabel", {
+        Size = UDim2.new(1, 0, 0, 30),
+        Position = UDim2.new(0, 0, 0.4, 80),
+        BackgroundTransparency = 1,
+        Text = "APPLECAT HUB",
+        TextColor3 = Color3.fromRGB(255, 105, 180),
+        Font = Enum.Font.GothamBold,
+        TextSize = 24,
+        TextTransparency = 1,
+        ZIndex = 100000,
+        Parent = intro
+    })
+
+    local subTitle = CreateInstance("TextLabel", {
+        Size = UDim2.new(1, 0, 0, 20),
+        Position = UDim2.new(0, 0, 0.4, 110),
+        BackgroundTransparency = 1,
+        Text = "Giao diện đỉnh cao - Chuyển động mượt mà",
+        TextColor3 = Color3.fromRGB(180, 180, 180),
+        Font = Enum.Font.Gotham,
+        TextSize = 12,
+        TextTransparency = 1,
+        ZIndex = 100000,
+        Parent = intro
+    })
+
+    PlayTween(logoImg, 1, Enum.EasingStyle.Back, Enum.EasingDirection.Out, {ImageTransparency = 0, Size = UDim2.fromOffset(140, 140), Position = UDim2.new(0.5, -70, 0.4, -70)})
+    task.wait(0.3)
+    PlayTween(introTitle, 0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, {TextTransparency = 0, Position = UDim2.new(0, 0, 0.4, 80)})
+    task.wait(0.1)
+    PlayTween(subTitle, 0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, {TextTransparency = 0, Position = UDim2.new(0, 0, 0.4, 110)})
+    task.wait(1.5)
+    
+    PlayTween(logoImg, 0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.In, {ImageTransparency = 1, Size = UDim2.fromOffset(100, 100)})
+    PlayTween(introTitle, 0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.In, {TextTransparency = 1})
+    PlayTween(subTitle, 0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.In, {TextTransparency = 1})
+    local fadeIntro = PlayTween(intro, 0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut, {BackgroundTransparency = 1})
+    fadeIntro.Completed:Connect(function()
+        intro:Destroy()
+    end)
+
+    local mainFrame = CreateInstance("Frame", {
+        Name = "MainFrame",
+        Size = size,
+        Position = UDim2.new(0.5, -size.X.Offset/2, 0.5, -size.Y.Offset/2),
+        BackgroundColor3 = GetThemeColor("Background"),
+        BorderSizePixel = 0,
+        ClipsDescendants = true,
+        Parent = mainGui
+    })
+
+    local mainCorner = CreateInstance("UICorner", {
+        CornerRadius = UDim.new(0, 10),
+        Parent = mainFrame
+    })
+
+    local mainBorder = CreateInstance("UIStroke", {
+        Thickness = 1.5,
+        Color = GetThemeColor("Border"),
+        ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+        Parent = mainFrame
+    })
+
+    local sidebar = CreateInstance("Frame", {
+        Name = "Sidebar",
+        Size = UDim2.new(0, 170, 1, 0),
+        Position = UDim2.new(0, 0, 0, 0),
+        BackgroundColor3 = GetThemeColor("Sidebar"),
+        BorderSizePixel = 0,
+        Parent = mainFrame
+    })
+
+    local sidebarCorner = CreateInstance("UICorner", {
+        CornerRadius = UDim.new(0, 10),
+        Parent = sidebar
+    })
+
+    local sidebarDivider = CreateInstance("Frame", {
+        Size = UDim2.new(0, 1, 1, 0),
+        Position = UDim2.new(1, -1, 0, 0),
+        BackgroundColor3 = GetThemeColor("Border"),
+        BorderSizePixel = 0,
+        Parent = sidebar
+    })
+
+    local header = CreateInstance("Frame", {
+        Name = "Header",
+        Size = UDim2.new(1, -20, 0, 50),
+        Position = UDim2.new(0, 10, 0, 0),
+        BackgroundTransparency = 1,
+        Parent = sidebar
+    })
+
+    local logo = CreateInstance("ImageLabel", {
+        Size = UDim2.fromOffset(28, 28),
+        Position = UDim2.new(0, 5, 0.5, -14),
+        BackgroundTransparency = 1,
+        Image = logoId,
+        Parent = header
+    })
+
+    local headerTitle = CreateInstance("TextLabel", {
+        Size = UDim2.new(1, -40, 1, 0),
+        Position = UDim2.new(0, 38, 0, 0),
+        BackgroundTransparency = 1,
+        Text = title,
+        TextColor3 = GetThemeColor("Text"),
+        Font = Enum.Font.GothamBold,
+        TextSize = 14,
+        TextXAlignment = Enum.TextXAlignment.Left,
+        Parent = header
+    })
+
+    local dragPanel = CreateInstance("Frame", {
+        Size = UDim2.new(1, -170, 0, 50),
+        Position = UDim2.new(0, 170, 0, 0),
+        BackgroundTransparency = 1,
+        Parent = mainFrame
+    })
+    MakeDraggable(dragPanel, mainFrame)
+
+    local closeBtn = CreateInstance("TextButton", {
+        Size = UDim2.fromOffset(24, 24),
+        Position = UDim2.new(1, -34, 0, 13),
+        BackgroundTransparency = 1,
+        Text = "✕",
+        TextColor3 = GetThemeColor("TextMuted"),
+        Font = Enum.Font.GothamBold,
+        TextSize = 12,
+        Parent = dragPanel
+    })
+
+    closeBtn.MouseButton1Click:Connect(function()
+        local closeTween = PlayTween(mainFrame, 0.4, Enum.EasingStyle.Back, Enum.EasingDirection.In, {
+            Size = UDim2.fromOffset(0, 0),
+            Position = UDim2.new(0.5, 0, 0.5, 0)
+        })
+        closeTween.Completed:Wait()
+        mainGui:Destroy()
+    end)
+
+    local minimizeBtn = CreateInstance("TextButton", {
+        Size = UDim2.fromOffset(24, 24),
+        Position = UDim2.new(1, -64, 0, 13),
+        BackgroundTransparency = 1,
+        Text = "—",
+        TextColor3 = GetThemeColor("TextMuted"),
+        Font = Enum.Font.GothamBold,
+        TextSize = 12,
+        Parent = dragPanel
+    })
+
+    local isMinimized = false
+    local originalSize = size
+    minimizeBtn.MouseButton1Click:Connect(function()
+        isMinimized = not isMinimized
+        if isMinimized then
+            PlayTween(mainFrame, 0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out, {
+                Size = UDim2.new(0, size.X.Offset, 0, 50)
+            })
+            minimizeBtn.Text = "+"
+        else
+            PlayTween(mainFrame, 0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out, {
+                Size = originalSize
+            })
+            minimizeBtn.Text = "—"
+        end
+    end)
+
+    -- [TÍNH NĂNG MỚI] Hệ thống ẩn/hiện mượt mà (Toggle System)
+    local uiVisible = true
+    local function ToggleUI()
+        uiVisible = not uiVisible
+        if uiVisible then
+            mainFrame.Visible = true
+            PlayTween(mainFrame, 0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out, {
+                Size = isMinimized and UDim2.new(0, size.X.Offset, 0, 50) or originalSize,
+                BackgroundTransparency = 0
+            })
+        else
+            local fadeTween = PlayTween(mainFrame, 0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out, {
+                Size = UDim2.new(0, size.X.Offset, 0, 0)
+            })
+            fadeTween.Completed:Connect(function()
+                if not uiVisible then mainFrame.Visible = false end
+            end)
+        end
+    end
+
+    -- Gắn sự kiện click vào nút nổi hình tròn
+    toggleButton.MouseButton1Click:Connect(ToggleUI)
+
+    -- Hiệu ứng hover cho nút nổi
+    toggleButton.MouseEnter:Connect(function()
+        PlayTween(toggleButton, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, {
+            BackgroundColor3 = GetThemeColor("ElementHover"),
+            Size = UDim2.fromOffset(55, 55)
+        })
+    end)
+    toggleButton.MouseLeave:Connect(function()
+        PlayTween(toggleButton, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, {
+            BackgroundColor3 = GetThemeColor("Sidebar"),
+            Size = UDim2.fromOffset(50, 50)
+        })
+    end)
+
+    -- Gắn sự kiện phím tắt bàn phím
+    UserInputService.InputBegan:Connect(function(input, processed)
+        if not processed and input.KeyCode == toggleKey then
+            ToggleUI()
+        end
+    end)
+
+    local searchBoxFrame = CreateInstance("Frame", {
+        Size = UDim2.new(1, -20, 0, 26),
+        Position = UDim2.new(0, 10, 0, 50),
+        BackgroundColor3 = GetThemeColor("Background"),
+        Parent = sidebar
+    })
+    CreateInstance("UICorner", { CornerRadius = UDim.new(0, 6), Parent = searchBoxFrame })
+    CreateInstance("UIStroke", { Color = GetThemeColor("Border"), Parent = searchBoxFrame })
+
+    local searchInput = CreateInstance("TextBox", {
+        Size = UDim2.new(1, -10, 1, 0),
+        Position = UDim2.new(0, 5, 0, 0),
+        BackgroundTransparency = 1,
+        PlaceholderText = "Tìm kiếm...",
+        Text = "",
+        TextColor3 = GetThemeColor("Text"),
+        PlaceholderColor3 = GetThemeColor("TextMuted"),
+        Font = Enum.Font.Gotham,
+        TextSize = 11,
+        TextXAlignment = Enum.TextXAlignment.Left,
+        Parent = searchBoxFrame
+    })
+
+    local tabListContainer = CreateInstance("ScrollingFrame", {
+        Size = UDim2.new(1, 0, 1, -95),
+        Position = UDim2.new(0, 0, 0, 85),
+        BackgroundTransparency = 1,
+        BorderSizePixel = 0,
+        CanvasSize = UDim2.new(0, 0, 0, 0),
+        ScrollBarThickness = 0,
+        Parent = sidebar
+    })
+
+    local tabListLayout = CreateInstance("UIListLayout", {
+        SortOrder = Enum.SortOrder.LayoutOrder,
+        Padding = UDim.new(0, 4),
+        Parent = tabListContainer
+    })
+    CreateInstance("UIPadding", {
+        PaddingLeft = UDim.new(0, 10),
+        PaddingRight = UDim.new(0, 10),
+        Parent = tabListContainer
+    })
+
+    local contentHolder = CreateInstance("Frame", {
+        Name = "ContentHolder",
+        Size = UDim2.new(1, -180, 1, -60),
+        Position = UDim2.new(0, 175, 0, 50),
+        BackgroundTransparency = 1,
+        Parent = mainFrame
+    })
+
+    local tabs = {}
+    local activeTab = nil
+
+    local windowObj = {}
+
+    function windowObj:CreateTab(tabName, tabIcon)
+        tabName = tabName or "Tab"
+        -- [TÍNH NĂNG MỚI] Áp dụng ánh xạ icon tự động qua hàm GetCorrectImageAsset
+        tabIcon = tabIcon or "rbxassetid://124862059676525"
+
+        local tabContent = CreateInstance("ScrollingFrame", {
+            Name = tabName .. "_Content",
+            Size = UDim2.new(1, 0, 1, 0),
+            BackgroundTransparency = 1,
+            BorderSizePixel = 0,
+            Visible = false,
+            CanvasSize = UDim2.new(0, 0, 0, 0),
+            ScrollBarThickness = 3,
+            ScrollBarImageColor3 = GetThemeColor("Border"),
+            Parent = contentHolder
+        })
+
+        local contentLayout = CreateInstance("UIListLayout", {
+            SortOrder = Enum.SortOrder.LayoutOrder,
+            Padding = UDim.new(0, 10),
+            Parent = tabContent
+        })
+        CreateInstance("UIPadding", {
+            PaddingLeft = UDim.new(0, 10),
+            PaddingRight = UDim.new(0, 10),
+            PaddingTop = UDim.new(0, 5),
+            PaddingBottom = UDim.new(0, 10),
+            Parent = tabContent
+        })
+
+        contentLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+            tabContent.CanvasSize = UDim2.new(0, 0, 0, contentLayout.AbsoluteContentSize.Y + 20)
+        end)
+
+        local tabBtn = CreateInstance("Frame", {
+            Size = UDim2.new(1, 0, 0, 32),
+            BackgroundColor3 = GetThemeColor("Sidebar"),
+            BackgroundTransparency = 1,
+            Parent = tabListContainer
+        })
+        CreateInstance("UICorner", { CornerRadius = UDim.new(0, 6), Parent = tabBtn })
+
+        local btnTrigger = CreateInstance("TextButton", {
+            Size = UDim2.new(1, 0, 1, 0),
+            BackgroundTransparency = 1,
+            Text = "",
+            Parent = tabBtn
+        })
+
+        local btnIcon = CreateInstance("ImageLabel", {
+            Size = UDim2.fromOffset(16, 16),
+            Position = UDim2.new(0, 10, 0.5, -8),
+            BackgroundTransparency = 1,
+            Image = tabIcon, -- Sẽ tự động lấy từ Icons dictionary qua CreateInstance
+            ImageColor3 = GetThemeColor("TextMuted"),
+            Parent = tabBtn
+        })
+
+        local btnTitle = CreateInstance("TextLabel", {
+            Size = UDim2.new(1, -36, 1, 0),
+            Position = UDim2.new(0, 32, 0, 0),
+            BackgroundTransparency = 1,
+            Text = tabName,
+            TextColor3 = GetThemeColor("TextMuted"),
+            Font = Enum.Font.GothamMedium,
+            TextSize = 12,
+            TextXAlignment = Enum.TextXAlignment.Left,
+            Parent = tabBtn
+        })
+
+        local function selectThisTab()
+            if activeTab then
+                activeTab.Content.Visible = false
+                PlayTween(activeTab.Button, 0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, {
+                    BackgroundTransparency = 1,
+                    BackgroundColor3 = GetThemeColor("Sidebar")
+                })
+                PlayTween(activeTab.TitleLabel, 0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, {
+                    TextColor3 = GetThemeColor("TextMuted")
+                })
+                PlayTween(activeTab.IconLabel, 0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, {
+                    ImageColor3 = GetThemeColor("TextMuted")
+                })
+            end
+
+            tabContent.Visible = true
+            PlayTween(tabBtn, 0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, {
+                BackgroundTransparency = 0,
+                BackgroundColor3 = GetThemeColor("Element")
+            })
+            PlayTween(btnTitle, 0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, {
+                TextColor3 = GetThemeColor("Accent")
+            })
+            PlayTween(btnIcon, 0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, {
+                ImageColor3 = GetThemeColor("Accent")
+            })
+
+            activeTab = {
+                Content = tabContent,
+                Button = tabBtn,
+                TitleLabel = btnTitle,
+                IconLabel = btnIcon
+            }
+        end
+
+        btnTrigger.MouseButton1Click:Connect(selectThisTab)
+
+        if #tabs == 0 then
+            selectThisTab()
+        end
+
+        local tabObj = {
+            Elements = {}
+        }
+
+        table.insert(tabs, {
+            Name = tabName,
+            ButtonFrame = tabBtn,
+            ContentFrame = tabContent
+        })
+
+        function tabObj:CreateSection(sectName)
+            sectName = sectName or "Mục lớn"
+            local sectFrame = CreateInstance("Frame", {
+                Size = UDim2.new(1, 0, 0, 30),
+                BackgroundTransparency = 1,
+                Parent = tabContent
+            })
+
+            local sectTitle = CreateInstance("TextLabel", {
+                Size = UDim2.new(1, 0, 1, 0),
+                BackgroundTransparency = 1,
+                Text = sectName:upper(),
+                TextColor3 = GetThemeColor("Accent"),
+                Font = Enum.Font.GothamBold,
+                TextSize = 10,
+                TextXAlignment = Enum.TextXAlignment.Left,
+                Parent = sectFrame
+            })
+
+            local sectionObj = {}
+
+            function sectionObj:CreateButton(btnText, callback)
+                btnText = btnText or "Nút Bấm"
+                callback = callback or function() end
+
+                local btnFrame = CreateInstance("Frame", {
+                    Size = UDim2.new(1, 0, 0, 36),
+                    BackgroundColor3 = GetThemeColor("Element"),
+                    Parent = tabContent
+                })
+                CreateInstance("UICorner", { CornerRadius = UDim.new(0, 6), Parent = btnFrame })
+                local stroke = CreateInstance("UIStroke", { Color = GetThemeColor("Border"), Parent = btnFrame })
+
+                local realBtn = CreateInstance("TextButton", {
+                    Size = UDim2.new(1, 0, 1, 0),
+                    BackgroundTransparency = 1,
+                    Text = "",
+                    Parent = btnFrame
+                })
+
+                local btnLabel = CreateInstance("TextLabel", {
+                    Size = UDim2.new(1, -20, 1, 0),
+                    Position = UDim2.new(0, 10, 0, 0),
+                    BackgroundTransparency = 1,
+                    Text = btnText,
+                    TextColor3 = GetThemeColor("Text"),
+                    Font = Enum.Font.GothamMedium,
+                    TextSize = 12,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    Parent = btnFrame
+                })
+
+                local hoverEffect = CreateInstance("Frame", {
+                    Size = UDim2.new(1, 0, 1, 0),
+                    BackgroundColor3 = GetThemeColor("Accent"),
+                    BackgroundTransparency = 1,
+                    Parent = btnFrame
+                })
+                CreateInstance("UICorner", { CornerRadius = UDim.new(0, 6), Parent = hoverEffect })
+
+                realBtn.MouseEnter:Connect(function()
+                    PlayTween(stroke, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Color = GetThemeColor("Accent") })
+                    PlayTween(hoverEffect, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { BackgroundTransparency = 0.95 })
+                end)
+
+                realBtn.MouseLeave:Connect(function()
+                    PlayTween(stroke, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Color = GetThemeColor("Border") })
+                    PlayTween(hoverEffect, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { BackgroundTransparency = 1 })
+                end)
+
+                realBtn.MouseButton1Down:Connect(function()
+                    PlayTween(btnFrame, 0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Size = UDim2.new(1, -4, 0, 34) })
+                    task.wait(0.1)
+                    PlayTween(btnFrame, 0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Size = UDim2.new(1, 0, 0, 36) })
+                end)
+
+                realBtn.MouseButton1Click:Connect(callback)
+
+                local btnControl = {}
+                function btnControl:SetText(newText)
+                    btnLabel.Text = newText
+                end
+                return btnControl
+            end
+
+            function sectionObj:CreateToggle(toggleText, default, callback)
+                toggleText = toggleText or "Hộp kiểm"
+                default = default or false
+                callback = callback or function() end
+
+                local state = default
+
+                local toggleFrame = CreateInstance("Frame", {
+                    Size = UDim2.new(1, 0, 0, 38),
+                    BackgroundColor3 = GetThemeColor("Element"),
+                    Parent = tabContent
+                })
+                CreateInstance("UICorner", { CornerRadius = UDim.new(0, 6), Parent = toggleFrame })
+                local stroke = CreateInstance("UIStroke", { Color = GetThemeColor("Border"), Parent = toggleFrame })
+
+                local tglLabel = CreateInstance("TextLabel", {
+                    Size = UDim2.new(1, -60, 1, 0),
+                    Position = UDim2.new(0, 10, 0, 0),
+                    BackgroundTransparency = 1,
+                    Text = toggleText,
+                    TextColor3 = GetThemeColor("Text"),
+                    Font = Enum.Font.GothamMedium,
+                    TextSize = 12,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    Parent = toggleFrame
+                })
+
+                local switch = CreateInstance("Frame", {
+                    Size = UDim2.fromOffset(36, 18),
+                    Position = UDim2.new(1, -46, 0.5, -9),
+                    BackgroundColor3 = state and GetThemeColor("Accent") or GetThemeColor("Border"),
+                    Parent = toggleFrame
+                })
+                CreateInstance("UICorner", { CornerRadius = UDim.new(1, 0), Parent = switch })
+
+                local circle = CreateInstance("Frame", {
+                    Size = UDim2.fromOffset(12, 12),
+                    Position = state and UDim2.new(1, -15, 0.5, -6) or UDim2.new(0, 3, 0.5, -6),
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                    Parent = switch
+                })
+                CreateInstance("UICorner", { CornerRadius = UDim.new(1, 0), Parent = circle })
+
+                local trigger = CreateInstance("TextButton", {
+                    Size = UDim2.new(1, 0, 1, 0),
+                    BackgroundTransparency = 1,
+                    Text = "",
+                    Parent = toggleFrame
+                })
+
+                local function updateToggle(animate)
+                    local targetColor = state and GetThemeColor("Accent") or GetThemeColor("Border")
+                    local targetPos = state and UDim2.new(1, -15, 0.5, -6) or UDim2.new(0, 3, 0.5, -6)
+                    
+                    if animate then
+                        PlayTween(switch, 0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out, { BackgroundColor3 = targetColor })
+                        PlayTween(circle, 0.35, Enum.EasingStyle.Elastic, Enum.EasingDirection.Out, { Position = targetPos })
+                    else
+                        switch.BackgroundColor3 = targetColor
+                        circle.Position = targetPos
+                    end
+                end
+
+                trigger.MouseButton1Click:Connect(function()
+                    state = not state
+                    updateToggle(true)
+                    callback(state)
+                end)
+
+                trigger.MouseEnter:Connect(function()
+                    PlayTween(stroke, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Color = GetThemeColor("Accent") })
+                end)
+
+                trigger.MouseLeave:Connect(function()
+                    PlayTween(stroke, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Color = GetThemeColor("Border") })
+                end)
+
+                updateToggle(false)
+
+                local toggleControl = {}
+                function toggleControl:Set(newState)
+                    state = newState
+                    updateToggle(true)
+                    callback(state)
+                end
+                return toggleControl
+            end
+
+            function sectionObj:CreateSlider(sliderText, min, max, default, callback)
+                sliderText = sliderText or "Thanh trượt"
+                min = min or 0
+                max = max or 100
+                default = math.clamp(default or min, min, max)
+                callback = callback or function() end
+
+                local currentVal = default
+
+                local sliderFrame = CreateInstance("Frame", {
+                    Size = UDim2.new(1, 0, 0, 48),
+                    BackgroundColor3 = GetThemeColor("Element"),
+                    Parent = tabContent
+                })
+                CreateInstance("UICorner", { CornerRadius = UDim.new(0, 6), Parent = sliderFrame })
+                local stroke = CreateInstance("UIStroke", { Color = GetThemeColor("Border"), Parent = sliderFrame })
+
+                local sldLabel = CreateInstance("TextLabel", {
+                    Size = UDim2.new(1, -100, 0, 20),
+                    Position = UDim2.new(0, 10, 0, 6),
+                    BackgroundTransparency = 1,
+                    Text = sliderText,
+                    TextColor3 = GetThemeColor("Text"),
+                    Font = Enum.Font.GothamMedium,
+                    TextSize = 12,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    Parent = sliderFrame
+                })
+
+                local valLabel = CreateInstance("TextLabel", {
+                    Size = UDim2.new(0, 80, 0, 20),
+                    Position = UDim2.new(1, -90, 0, 6),
+                    BackgroundTransparency = 1,
+                    Text = tostring(currentVal),
+                    TextColor3 = GetThemeColor("Accent"),
+                    Font = Enum.Font.GothamBold,
+                    TextSize = 12,
+                    TextXAlignment = Enum.TextXAlignment.Right,
+                    Parent = sliderFrame
+                })
+
+                local barBg = CreateInstance("Frame", {
+                    Size = UDim2.new(1, -20, 0, 6),
+                    Position = UDim2.new(0, 10, 0, 32),
+                    BackgroundColor3 = GetThemeColor("Border"),
+                    BorderSizePixel = 0,
+                    Parent = sliderFrame
+                })
+                CreateInstance("UICorner", { CornerRadius = UDim.new(1, 0), Parent = barBg })
+
+                local barFill = CreateInstance("Frame", {
+                    Size = UDim2.new((currentVal - min) / (max - min), 0, 1, 0),
+                    BackgroundColor3 = GetThemeColor("Accent"),
+                    BorderSizePixel = 0,
+                    Parent = barBg
+                })
+                CreateInstance("UICorner", { CornerRadius = UDim.new(1, 0), Parent = barFill })
+
+                local sliderBtn = CreateInstance("TextButton", {
+                    Size = UDim2.new(1, 0, 1, 0),
+                    BackgroundTransparency = 1,
+                    Text = "",
+                    Parent = sliderFrame
+                })
+
+                local function updateSlider(input)
+                    local relativeX = (input.Position.X - barBg.AbsolutePosition.X) / barBg.AbsoluteSize.X
+                    local percentage = math.clamp(relativeX, 0, 1)
+                    local value = math.round(min + (max - min) * percentage)
+                    
+                    currentVal = value
+                    valLabel.Text = tostring(value)
+                    PlayTween(barFill, 0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Size = UDim2.new(percentage, 0, 1, 0) })
+                    callback(value)
+                end
+
+                local sliding = false
+                sliderBtn.InputBegan:Connect(function(input)
+                    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                        sliding = true
+                        updateSlider(input)
+                    end
+                end)
+
+                UserInputService.InputChanged:Connect(function(input)
+                    if sliding and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+                        updateSlider(input)
+                    end
+                end)
+
+                UserInputService.InputEnded:Connect(function(input)
+                    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                        sliding = false
+                    end
+                end)
+
+                sliderBtn.MouseEnter:Connect(function()
+                    PlayTween(stroke, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Color = GetThemeColor("Accent") })
+                end)
+
+                sliderBtn.MouseLeave:Connect(function()
+                    PlayTween(stroke, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Color = GetThemeColor("Border") })
+                end)
+
+                local sliderControl = {}
+                function sliderControl:Set(val)
+                    val = math.clamp(val, min, max)
+                    currentVal = val
+                    valLabel.Text = tostring(val)
+                    local percentage = (val - min) / (max - min)
+                    PlayTween(barFill, 0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Size = UDim2.new(percentage, 0, 1, 0) })
+                    callback(val)
+                end
+                return sliderControl
+            end
+
+            function sectionObj:CreateTextbox(boxText, placeholder, numericOnly, callback)
+                boxText = boxText or "Nhập liệu"
+                placeholder = placeholder or "Nhập tại đây..."
+                numericOnly = numericOnly or false
+                callback = callback or function() end
+
+                local boxFrame = CreateInstance("Frame", {
+                    Size = UDim2.new(1, 0, 0, 42),
+                    BackgroundColor3 = GetThemeColor("Element"),
+                    Parent = tabContent
+                })
+                CreateInstance("UICorner", { CornerRadius = UDim.new(0, 6), Parent = boxFrame })
+                local stroke = CreateInstance("UIStroke", { Color = GetThemeColor("Border"), Parent = boxFrame })
+
+                local boxLabel = CreateInstance("TextLabel", {
+                    Size = UDim2.new(0.4, 0, 1, 0),
+                    Position = UDim2.new(0, 10, 0, 0),
+                    BackgroundTransparency = 1,
+                    Text = boxText,
+                    TextColor3 = GetThemeColor("Text"),
+                    Font = Enum.Font.GothamMedium,
+                    TextSize = 12,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    Parent = boxFrame
+                })
+
+                local inputBg = CreateInstance("Frame", {
+                    Size = UDim2.new(0.5, 0, 0, 26),
+                    Position = UDim2.new(0.5, -10, 0.5, -13),
+                    BackgroundColor3 = GetThemeColor("Background"),
+                    Parent = boxFrame
+                })
+                CreateInstance("UICorner", { CornerRadius = UDim.new(0, 4), Parent = inputBg })
+                local inputStroke = CreateInstance("UIStroke", { Color = GetThemeColor("Border"), Parent = inputBg })
+
+                local boxInput = CreateInstance("TextBox", {
+                    Size = UDim2.new(1, -10, 1, 0),
+                    Position = UDim2.new(0, 5, 0, 0),
+                    BackgroundTransparency = 1,
+                    PlaceholderText = placeholder,
+                    Text = "",
+                    TextColor3 = GetThemeColor("Text"),
+                    PlaceholderColor3 = GetThemeColor("TextMuted"),
+                    Font = Enum.Font.Gotham,
+                    TextSize = 11,
+                    Parent = inputBg
+                })
+
+                boxInput.Focused:Connect(function()
+                    PlayTween(inputStroke, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Color = GetThemeColor("Accent") })
+                    PlayTween(stroke, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Color = GetThemeColor("Accent") })
+                end)
+
+                boxInput.FocusLost:Connect(function(enterPressed)
+                    PlayTween(inputStroke, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Color = GetThemeColor("Border") })
+                    PlayTween(stroke, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Color = GetThemeColor("Border") })
+                    
+                    local text = boxInput.Text
+                    if numericOnly then
+                        local cleanNum = text:gsub("%D", "")
+                        boxInput.Text = cleanNum
+                        text = cleanNum
+                    end
+                    callback(text, enterPressed)
+                end)
+
+                local textboxControl = {}
+                function textboxControl:Set(newText)
+                    boxInput.Text = newText
+                    callback(newText, false)
+                end
+                return textboxControl
+            end
+
+            function sectionObj:CreateDropdown(dropText, list, default, callback)
+                dropText = dropText or "Menu lựa chọn"
+                list = list or {}
+                default = default or list[1]
+                callback = callback or function() end
+
+                local selected = default
+                local isOpened = false
+
+                local dropFrame = CreateInstance("Frame", {
+                    Size = UDim2.new(1, 0, 0, 38),
+                    BackgroundColor3 = GetThemeColor("Element"),
+                    ClipsDescendants = true,
+                    Parent = tabContent
+                })
+                local corner = CreateInstance("UICorner", { CornerRadius = UDim.new(0, 6), Parent = dropFrame })
+                local stroke = CreateInstance("UIStroke", { Color = GetThemeColor("Border"), Parent = dropFrame })
+
+                local dropLabel = CreateInstance("TextLabel", {
+                    Size = UDim2.new(0.5, 0, 0, 38),
+                    Position = UDim2.new(0, 10, 0, 0),
+                    BackgroundTransparency = 1,
+                    Text = dropText,
+                    TextColor3 = GetThemeColor("Text"),
+                    Font = Enum.Font.GothamMedium,
+                    TextSize = 12,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    Parent = dropFrame
+                })
+
+                local selectionLabel = CreateInstance("TextLabel", {
+                    Size = UDim2.new(0.4, 0, 0, 38),
+                    Position = UDim2.new(0.5, -20, 0, 0),
+                    BackgroundTransparency = 1,
+                    Text = tostring(selected),
+                    TextColor3 = GetThemeColor("Accent"),
+                    Font = Enum.Font.GothamBold,
+                    TextSize = 12,
+                    TextXAlignment = Enum.TextXAlignment.Right,
+                    Parent = dropFrame
+                })
+
+                local arrow = CreateInstance("TextLabel", {
+                    Size = UDim2.new(0, 20, 0, 38),
+                    Position = UDim2.new(1, -25, 0, 0),
+                    BackgroundTransparency = 1,
+                    Text = "▼",
+                    TextColor3 = GetThemeColor("TextMuted"),
+                    Font = Enum.Font.Gotham,
+                    TextSize = 10,
+                    Parent = dropFrame
+                })
+
+                local itemsHolder = CreateInstance("Frame", {
+                    Size = UDim2.new(1, -20, 0, 0),
+                    Position = UDim2.new(0, 10, 0, 38),
+                    BackgroundTransparency = 1,
+                    Parent = dropFrame
+                })
+                local itemLayout = CreateInstance("UIListLayout", {
+                    SortOrder = Enum.SortOrder.LayoutOrder,
+                    Padding = UDim.new(0, 3),
+                    Parent = itemsHolder
+                })
+
+                local trigger = CreateInstance("TextButton", {
+                    Size = UDim2.new(1, 0, 0, 38),
+                    BackgroundTransparency = 1,
+                    Text = "",
+                    Parent = dropFrame
+                })
+
+                local function refreshDropdown()
+                    for _, v in pairs(itemsHolder:GetChildren()) do
+                        if v:IsA("TextButton") then v:Destroy() end
+                    end
+
+                    for _, item in ipairs(list) do
+                        local itemBtn = CreateInstance("TextButton", {
+                            Size = UDim2.new(1, 0, 0, 28),
+                            BackgroundColor3 = GetThemeColor("Background"),
+                            BorderSizePixel = 0,
+                            Text = tostring(item),
+                            TextColor3 = GetThemeColor("Text"),
+                            Font = Enum.Font.Gotham,
+                            TextSize = 11,
+                            Parent = itemsHolder
+                        })
+                        CreateInstance("UICorner", { CornerRadius = UDim.new(0, 4), Parent = itemBtn })
+                        
+                        itemBtn.MouseEnter:Connect(function()
+                            PlayTween(itemBtn, 0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { BackgroundColor3 = GetThemeColor("ElementHover") })
+                        end)
+                        itemBtn.MouseLeave:Connect(function()
+                            PlayTween(itemBtn, 0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { BackgroundColor3 = GetThemeColor("Background") })
+                        end)
+
+                        itemBtn.MouseButton1Click:Connect(function()
+                            selected = item
+                            selectionLabel.Text = tostring(item)
+                            isOpened = false
+                            PlayTween(dropFrame, 0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out, { Size = UDim2.new(1, 0, 0, 38) })
+                            PlayTween(arrow, 0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out, { Rotation = 0 })
+                            callback(item)
+                        end)
+                    end
+                end
+
+                trigger.MouseButton1Click:Connect(function()
+                    isOpened = not isOpened
+                    local totalHeight = isOpened and (#list * 31 + 45) or 38
+                    local rotation = isOpened and 180 or 0
+
+                    PlayTween(dropFrame, 0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out, { Size = UDim2.new(1, 0, 0, totalHeight) })
+                    PlayTween(arrow, 0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out, { Rotation = rotation })
+                end)
+
+                trigger.MouseEnter:Connect(function()
+                    PlayTween(stroke, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Color = GetThemeColor("Accent") })
+                end)
+
+                trigger.MouseLeave:Connect(function()
+                    PlayTween(stroke, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Color = GetThemeColor("Border") })
+                end)
+
+                refreshDropdown()
+
+                local dropdownControl = {}
+                function dropdownControl:Refresh(newList)
+                    list = newList
+                    refreshDropdown()
+                end
+                return dropdownControl
+            end
+
+            function sectionObj:CreateColorpicker(pickerText, default, callback)
+                pickerText = pickerText or "Bảng màu"
+                default = default or Color3.fromRGB(255, 105, 180)
+                callback = callback or function() end
+
+                local stateColor = default
+                local isOpened = false
+
+                local pickerFrame = CreateInstance("Frame", {
+                    Size = UDim2.new(1, 0, 0, 38),
+                    BackgroundColor3 = GetThemeColor("Element"),
+                    ClipsDescendants = true,
+                    Parent = tabContent
+                })
+                CreateInstance("UICorner", { CornerRadius = UDim.new(0, 6), Parent = pickerFrame })
+                local stroke = CreateInstance("UIStroke", { Color = GetThemeColor("Border"), Parent = pickerFrame })
+
+                local pickerLabel = CreateInstance("TextLabel", {
+                    Size = UDim2.new(0.5, 0, 0, 38),
+                    Position = UDim2.new(0, 10, 0, 0),
+                    BackgroundTransparency = 1,
+                    Text = pickerText,
+                    TextColor3 = GetThemeColor("Text"),
+                    Font = Enum.Font.GothamMedium,
+                    TextSize = 12,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    Parent = pickerFrame
+                })
+
+                local previewColor = CreateInstance("Frame", {
+                    Size = UDim2.fromOffset(26, 16),
+                    Position = UDim2.new(1, -40, 0.5, -8),
+                    BackgroundColor3 = stateColor,
+                    Parent = pickerFrame
+                })
+                CreateInstance("UICorner", { CornerRadius = UDim.new(0, 4), Parent = previewColor })
+
+                local holder = CreateInstance("Frame", {
+                    Size = UDim2.new(1, -20, 0, 80),
+                    Position = UDim2.new(0, 10, 0, 38),
+                    BackgroundTransparency = 1,
+                    Parent = pickerFrame
+                })
+
+                local rainbowGradient = CreateInstance("Frame", {
+                    Size = UDim2.new(1, 0, 0, 10),
+                    Position = UDim2.new(0, 0, 0, 10),
+                    Parent = holder
+                })
+                local colorG = CreateInstance("UIGradient", {
+                    Color = ColorSequence.new({
+                        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),
+                        ColorSequenceKeypoint.new(0.16, Color3.fromRGB(255, 255, 0)),
+                        ColorSequenceKeypoint.new(0.33, Color3.fromRGB(0, 255, 0)),
+                        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 255, 255)),
+                        ColorSequenceKeypoint.new(0.66, Color3.fromRGB(0, 0, 255)),
+                        ColorSequenceKeypoint.new(0.83, Color3.fromRGB(255, 0, 255)),
+                        ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 0))
+                    }),
+                    Parent = rainbowGradient
+                })
+                CreateInstance("UICorner", { CornerRadius = UDim.new(1, 0), Parent = rainbowGradient })
+
+                local rainbowPin = CreateInstance("Frame", {
+                    Size = UDim2.fromOffset(6, 14),
+                    Position = UDim2.new(0.5, -3, 0, -2),
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                })
+                rainbowPin.Parent = rainbowGradient
+                CreateInstance("UICorner", { CornerRadius = UDim.new(0, 2), Parent = rainbowPin })
+
+                local valGradient = CreateInstance("Frame", {
+                    Size = UDim2.new(1, 0, 0, 10),
+                    Position = UDim2.new(0, 0, 0, 30),
+                    Parent = holder
+                })
+                local valG = CreateInstance("UIGradient", {
+                    Color = ColorSequence.new({
+                        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+                        ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
+                    }),
+                    Parent = valGradient
+                })
+                CreateInstance("UICorner", { CornerRadius = UDim.new(1, 0), Parent = valGradient })
+
+                local valPin = CreateInstance("Frame", {
+                    Size = UDim2.fromOffset(6, 14),
+                    Position = UDim2.new(0, 0, 0, -2),
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                    Parent = valGradient
+                })
+                CreateInstance("UICorner", { CornerRadius = UDim.new(0, 2), Parent = valPin })
+
+                local function getHueColor(percentage)
+                    local kp = colorG.Color.Keypoints
+                    for i = 1, #kp - 1 do
+                        if percentage >= kp[i].Time and percentage <= kp[i+1].Time then
+                            local alpha = (percentage - kp[i].Time) / (kp[i+1].Time - kp[i].Time)
+                            return kp[i].Value:Lerp(kp[i+1].Value, alpha)
+                        end
+                    end
+                    return kp[1].Value
+                end
+
+                local dragRainbow = false
+                local dragVal = false
+
+                local function updateRainbow(input)
+                    local relativeX = (input.Position.X - rainbowGradient.AbsolutePosition.X) / rainbowGradient.AbsoluteSize.X
+                    local percentage = math.clamp(relativeX, 0, 1)
+                    rainbowPin.Position = UDim2.new(percentage, -3, 0, -2)
+                    
+                    local baseColor = getHueColor(percentage)
+                    valG.Color = ColorSequence.new({
+                        ColorSequenceKeypoint.new(0, baseColor),
+                        ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
+                    })
+                    
+                    local valuePercentage = (valPin.Position.X.Scale)
+                    stateColor = baseColor:Lerp(Color3.fromRGB(0, 0, 0), valuePercentage)
+                    previewColor.BackgroundColor3 = stateColor
+                    callback(stateColor)
+                end
+
+                local function updateVal(input)
+                    local relativeX = (input.Position.X - valGradient.AbsolutePosition.X) / valGradient.AbsoluteSize.X
+                    local percentage = math.clamp(relativeX, 0, 1)
+                    valPin.Position = UDim2.new(percentage, -3, 0, -2)
+                    
+                    local baseColor = getHueColor(rainbowPin.Position.X.Scale)
+                    stateColor = baseColor:Lerp(Color3.fromRGB(0, 0, 0), percentage)
+                    previewColor.BackgroundColor3 = stateColor
+                    callback(stateColor)
+                end
+
+                rainbowGradient.InputBegan:Connect(function(input)
+                    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                        dragRainbow = true
+                        updateRainbow(input)
+                    end
+                end)
+
+                valGradient.InputBegan:Connect(function(input)
+                    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                        dragVal = true
+                        updateVal(input)
+                    end
+                end)
+
+                UserInputService.InputChanged:Connect(function(input)
+                    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+                        if dragRainbow then
+                            updateRainbow(input)
+                        elseif dragVal then
+                            updateVal(input)
+                        end
+                    end
+                end)
+
+                UserInputService.InputEnded:Connect(function(input)
+                    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                        dragRainbow = false
+                        dragVal = false
+                    end
+                end)
+
+                local trigger = CreateInstance("TextButton", {
+                    Size = UDim2.new(1, 0, 0, 38),
+                    BackgroundTransparency = 1,
+                    Text = "",
+                    Parent = pickerFrame
+                })
+
+                trigger.MouseButton1Click:Connect(function()
+                    isOpened = not isOpened
+                    local totalHeight = isOpened and 120 or 38
+                    PlayTween(pickerFrame, 0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out, { Size = UDim2.new(1, 0, 0, totalHeight) })
+                end)
+
+                trigger.MouseEnter:Connect(function()
+                    PlayTween(stroke, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Color = GetThemeColor("Accent") })
+                end)
+
+                trigger.MouseLeave:Connect(function()
+                    PlayTween(stroke, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Color = GetThemeColor("Border") })
+                end)
+
+                local colorpickerControl = {}
+                function colorpickerControl:Set(color)
+                    stateColor = color
+                    previewColor.BackgroundColor3 = color
+                    callback(color)
+                end
+                return colorpickerControl
+            end
+
+            function sectionObj:CreateImageToggle(toggleText, default, callback)
+                toggleText = toggleText or "Bật/Tắt Hình ảnh"
+                default = default or false
+                callback = callback or function() end
+
+                local state = default
+
+                local toggleFrame = CreateInstance("Frame", {
+                    Size = UDim2.new(1, 0, 0, 70),
+                    BackgroundColor3 = GetThemeColor("Element"),
+                    Parent = tabContent
+                })
+                CreateInstance("UICorner", { CornerRadius = UDim.new(0, 6), Parent = toggleFrame })
+                local stroke = CreateInstance("UIStroke", { Color = GetThemeColor("Border"), Parent = toggleFrame })
+
+                local tglLabel = CreateInstance("TextLabel", {
+                    Size = UDim2.new(1, -120, 0, 30),
+                    Position = UDim2.new(0, 10, 0, 10),
+                    BackgroundTransparency = 1,
+                    Text = toggleText,
+                    TextColor3 = GetThemeColor("Text"),
+                    Font = Enum.Font.GothamMedium,
+                    TextSize = 12,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    Parent = toggleFrame
+                })
+
+                local imgPreview = CreateInstance("ImageLabel", {
+                    Size = UDim2.fromOffset(50, 50),
+                    Position = UDim2.new(1, -65, 0.5, -25),
+                    BackgroundTransparency = 1,
+                    Image = logoId,
+                    ImageTransparency = state and 0 or 0.8,
+                    Parent = toggleFrame
+                })
+                CreateInstance("UICorner", { CornerRadius = UDim.new(0, 6), Parent = imgPreview })
+
+                local switch = CreateInstance("Frame", {
+                    Size = UDim2.fromOffset(36, 18),
+                    Position = UDim2.new(0, 10, 0.5, 5),
+                    BackgroundColor3 = state and GetThemeColor("Accent") or GetThemeColor("Border"),
+                    Parent = toggleFrame
+                })
+                CreateInstance("UICorner", { CornerRadius = UDim.new(1, 0), Parent = switch })
+
+                local circle = CreateInstance("Frame", {
+                    Size = UDim2.fromOffset(12, 12),
+                    Position = state and UDim2.new(1, -15, 0.5, -6) or UDim2.new(0, 3, 0.5, -6),
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                    Parent = switch
+                })
+                CreateInstance("UICorner", { CornerRadius = UDim.new(1, 0), Parent = circle })
+
+                local trigger = CreateInstance("TextButton", {
+                    Size = UDim2.new(1, 0, 1, 0),
+                    BackgroundTransparency = 1,
+                    Text = "",
+                    Parent = toggleFrame
+                })
+
+                local function updateToggle(animate)
+                    local targetColor = state and GetThemeColor("Accent") or GetThemeColor("Border")
+                    local targetPos = state and UDim2.new(1, -15, 0.5, -6) or UDim2.new(0, 3, 0.5, -6)
+                    local targetTrans = state and 0 or 0.8
+
+                    if animate then
+                        PlayTween(switch, 0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out, { BackgroundColor3 = targetColor })
+                        PlayTween(circle, 0.35, Enum.EasingStyle.Elastic, Enum.EasingDirection.Out, { Position = targetPos })
+                        PlayTween(imgPreview, 0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { ImageTransparency = targetTrans })
+                    else
+                        switch.BackgroundColor3 = targetColor
+                        circle.Position = targetPos
+                        imgPreview.ImageTransparency = targetTrans
+                    end
+                end
+
+                trigger.MouseButton1Click:Connect(function()
+                    state = not state
+                    updateToggle(true)
+                    callback(state)
+                end)
+
+                trigger.MouseEnter:Connect(function()
+                    PlayTween(stroke, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Color = GetThemeColor("Accent") })
+                end)
+
+                trigger.MouseLeave:Connect(function()
+                    PlayTween(stroke, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Color = GetThemeColor("Border") })
+                end)
+
+                updateToggle(false)
+
+                local toggleControl = {}
+                function toggleControl:Set(newState)
+                    state = newState
+                    updateToggle(true)
+                    callback(state)
+                end
+                return toggleControl
+            end
+
+            return sectionObj
+        end
+
+        return tabObj
+    end
+
+    function windowObj:OnThemeChange(themeName)
+        if AppleCatLibrary.Themes[themeName] then
+            AppleCatLibrary.CurrentTheme = themeName
+            mainFrame.BackgroundColor3 = GetThemeColor("Background")
+            sidebar.BackgroundColor3 = GetThemeColor("Sidebar")
+            sidebarDivider.BackgroundColor3 = GetThemeColor("Border")
+            headerTitle.TextColor3 = GetThemeColor("Text")
+            mainBorder.Color = GetThemeColor("Border")
+            closeBtn.TextColor3 = GetThemeColor("TextMuted")
+            minimizeBtn.TextColor3 = GetThemeColor("TextMuted")
+            
+            -- Cập nhật màu viền/nền cho Nút Toggle nổi theo Theme mới
+            toggleButton.BackgroundColor3 = GetThemeColor("Sidebar")
+            toggleButtonStroke.Color = GetThemeColor("Accent")
+        end
+    end
+
+    searchBoxFrame.MouseEnter:Connect(function()
+        PlayTween(searchBoxFrame:FindFirstChildOfClass("UIStroke"), 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Color = GetThemeColor("Accent") })
+    end)
+    searchBoxFrame.MouseLeave:Connect(function()
+        PlayTween(searchBoxFrame:FindFirstChildOfClass("UIStroke"), 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Color = GetThemeColor("Border") })
+    end)
+
+    searchInput:GetPropertyChangedSignal("Text"):Connect(function()
+        local query = searchInput.Text:lower()
+        for _, tab in ipairs(tabs) do
+            for _, child in ipairs(tab.ContentFrame:GetChildren()) do
+                if child:IsA("Frame") then
+                    local label = child:FindFirstChildOfClass("TextLabel")
+                    if label and label.Text:lower():find(query) then
+                        child.Visible = true
+                    elseif child:IsA("Frame") and child.Name ~= "UIListLayout" then
+                        child.Visible = false
+                    end
+                end
+            end
+        end
+    end)
+
+    table.insert(AppleCatLibrary.CreatedGUIs, mainGui)
+    return windowObj
+end
+
+return AppleCatLibrary
