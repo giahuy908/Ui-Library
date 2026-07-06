@@ -63,11 +63,27 @@ local AppleCatLibrary = {
     Signals = {}
 }
 
+local function GetCorrectImageAsset(assetString)
+    if type(assetString) == "string" then
+        local id = assetString:match("%d+")
+        if id then
+            return "rbxthumb://type=Asset&id=" .. id .. "&w=420&h=420"
+        end
+    elseif type(assetString) == "number" then
+        return "rbxthumb://type=Asset&id=" .. tostring(assetString) .. "&w=420&h=420"
+    end
+    return assetString
+end
+
 local function CreateInstance(className, properties)
     local instance = Instance.new(className)
     for k, v in pairs(properties) do
         if k ~= "Parent" then
-            instance[k] = v
+            if (k == "Image" or k == "HoverImage" or k == "PressedImage") then
+                instance[k] = GetCorrectImageAsset(v)
+            else
+                instance[k] = v
+            end
         end
     end
     if properties.Parent then
@@ -132,7 +148,7 @@ end
 function AppleCatLibrary:Notify(config)
     config = config or {}
     local title = config.Title or "AppleCat Notify"
-    local desc = config.Content or "Thành phần hệ thống AppleCat đã được cập nhật!"
+    local desc = config.Content or "Hệ thống AppleCat đã sẵn sàng!"
     local duration = config.Duration or 3
     local styleColor = config.Color or GetThemeColor("Accent")
 
@@ -246,7 +262,7 @@ end
 
 function AppleCatLibrary:CreateWindow(config)
     config = config or {}
-    local title = config.Title or "AppleCat Premium"
+    local title = config.Title or "AppleCat Hub"
     local size = config.Size or UDim2.fromOffset(580, 440)
     local defaultTheme = config.Theme or "Dark"
     local logoId = config.Logo or "rbxassetid://124862059676525"
@@ -309,9 +325,9 @@ function AppleCatLibrary:CreateWindow(config)
 
     PlayTween(logoImg, 1, Enum.EasingStyle.Back, Enum.EasingDirection.Out, {ImageTransparency = 0, Size = UDim2.fromOffset(140, 140), Position = UDim2.new(0.5, -70, 0.4, -70)})
     task.wait(0.3)
-    PlayTween(introTitle, 0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, {TextTransparency = 0, Position = UDim2.new(0, 0, 0.4, 90)})
-    task.wait(0.2)
-    PlayTween(subTitle, 0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, {TextTransparency = 0})
+    PlayTween(introTitle, 0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, {TextTransparency = 0, Position = UDim2.new(0, 0, 0.4, 80)})
+    task.wait(0.1)
+    PlayTween(subTitle, 0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, {TextTransparency = 0, Position = UDim2.new(0, 0, 0.4, 110)})
     task.wait(1.5)
     
     PlayTween(logoImg, 0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.In, {ImageTransparency = 1, Size = UDim2.fromOffset(100, 100)})
@@ -884,15 +900,15 @@ function AppleCatLibrary:CreateWindow(config)
                     end
                 end)
 
-                sliderBtn.InputEnded:Connect(function(input)
-                    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-                        sliding = false
-                    end
-                end)
-
                 UserInputService.InputChanged:Connect(function(input)
                     if sliding and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
                         updateSlider(input)
+                    end
+                end)
+
+                UserInputService.InputEnded:Connect(function(input)
+                    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                        sliding = false
                     end
                 end)
 
@@ -1192,8 +1208,9 @@ function AppleCatLibrary:CreateWindow(config)
                     Size = UDim2.fromOffset(6, 14),
                     Position = UDim2.new(0.5, -3, 0, -2),
                     BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-                    Parent = rainbowGradient
+                    Parent = rainbowPin
                 })
+                rainbowPin.Parent = rainbowGradient
                 CreateInstance("UICorner", { CornerRadius = UDim.new(0, 2), Parent = rainbowPin })
 
                 local valGradient = CreateInstance("Frame", {
@@ -1321,23 +1338,22 @@ function AppleCatLibrary:CreateWindow(config)
                 return colorpickerControl
             end
 
-            function sectionObj:CreateImageToggle(toggleText, imageId, default, callback)
-                toggleText = toggleText or "Bật tắt hình ảnh"
-                imageId = imageId or "rbxassetid://124862059676525"
+            function sectionObj:CreateImageToggle(toggleText, default, callback)
+                toggleText = toggleText or "Bật/Tắt Hình ảnh"
                 default = default or false
                 callback = callback or function() end
 
                 local state = default
 
-                local containerFrame = CreateInstance("Frame", {
-                    Size = UDim2.new(1, 0, 0, 110),
+                local toggleFrame = CreateInstance("Frame", {
+                    Size = UDim2.new(1, 0, 0, 70),
                     BackgroundColor3 = GetThemeColor("Element"),
                     Parent = tabContent
                 })
-                CreateInstance("UICorner", { CornerRadius = UDim.new(0, 6), Parent = containerFrame })
-                local stroke = CreateInstance("UIStroke", { Color = GetThemeColor("Border"), Parent = containerFrame })
+                CreateInstance("UICorner", { CornerRadius = UDim.new(0, 6), Parent = toggleFrame })
+                local stroke = CreateInstance("UIStroke", { Color = GetThemeColor("Border"), Parent = toggleFrame })
 
-                local label = CreateInstance("TextLabel", {
+                local tglLabel = CreateInstance("TextLabel", {
                     Size = UDim2.new(1, -120, 0, 30),
                     Position = UDim2.new(0, 10, 0, 10),
                     BackgroundTransparency = 1,
@@ -1346,36 +1362,24 @@ function AppleCatLibrary:CreateWindow(config)
                     Font = Enum.Font.GothamMedium,
                     TextSize = 12,
                     TextXAlignment = Enum.TextXAlignment.Left,
-                    Parent = containerFrame
+                    Parent = toggleFrame
                 })
 
-                local imgLabel = CreateInstance("ImageLabel", {
-                    Size = UDim2.fromOffset(80, 80),
-                    Position = UDim2.new(1, -95, 0.5, -40),
+                local imgPreview = CreateInstance("ImageLabel", {
+                    Size = UDim2.fromOffset(50, 50),
+                    Position = UDim2.new(1, -65, 0.5, -25),
                     BackgroundTransparency = 1,
-                    Image = imageId,
+                    Image = logoId,
                     ImageTransparency = state and 0 or 0.8,
-                    Parent = containerFrame
+                    Parent = toggleFrame
                 })
-                CreateInstance("UICorner", { CornerRadius = UDim.new(0, 6), Parent = imgLabel })
-
-                local subLabel = CreateInstance("TextLabel", {
-                    Size = UDim2.new(1, -120, 0, 20),
-                    Position = UDim2.new(0, 10, 0, 35),
-                    BackgroundTransparency = 1,
-                    Text = state and "Trạng thái: Đang hiển thị" or "Trạng thái: Đang ẩn",
-                    TextColor3 = GetThemeColor("TextMuted"),
-                    Font = Enum.Font.Gotham,
-                    TextSize = 10,
-                    TextXAlignment = Enum.TextXAlignment.Left,
-                    Parent = containerFrame
-                })
+                CreateInstance("UICorner", { CornerRadius = UDim.new(0, 6), Parent = imgPreview })
 
                 local switch = CreateInstance("Frame", {
                     Size = UDim2.fromOffset(36, 18),
-                    Position = UDim2.new(0, 10, 0.5, 15),
+                    Position = UDim2.new(0, 10, 0.5, 5),
                     BackgroundColor3 = state and GetThemeColor("Accent") or GetThemeColor("Border"),
-                    Parent = containerFrame
+                    Parent = toggleFrame
                 })
                 CreateInstance("UICorner", { CornerRadius = UDim.new(1, 0), Parent = switch })
 
@@ -1391,24 +1395,22 @@ function AppleCatLibrary:CreateWindow(config)
                     Size = UDim2.new(1, 0, 1, 0),
                     BackgroundTransparency = 1,
                     Text = "",
-                    Parent = containerFrame
+                    Parent = toggleFrame
                 })
 
                 local function updateToggle(animate)
                     local targetColor = state and GetThemeColor("Accent") or GetThemeColor("Border")
                     local targetPos = state and UDim2.new(1, -15, 0.5, -6) or UDim2.new(0, 3, 0.5, -6)
                     local targetTrans = state and 0 or 0.8
-                    
-                    subLabel.Text = state and "Trạng thái: Đang hiển thị" or "Trạng thái: Đang ẩn"
 
                     if animate then
                         PlayTween(switch, 0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out, { BackgroundColor3 = targetColor })
                         PlayTween(circle, 0.35, Enum.EasingStyle.Elastic, Enum.EasingDirection.Out, { Position = targetPos })
-                        PlayTween(imgLabel, 0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { ImageTransparency = targetTrans })
+                        PlayTween(imgPreview, 0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { ImageTransparency = targetTrans })
                     else
                         switch.BackgroundColor3 = targetColor
                         circle.Position = targetPos
-                        imgLabel.ImageTransparency = targetTrans
+                        imgPreview.ImageTransparency = targetTrans
                     end
                 end
 
@@ -1428,13 +1430,13 @@ function AppleCatLibrary:CreateWindow(config)
 
                 updateToggle(false)
 
-                local control = {}
-                function control:Set(newState)
+                local toggleControl = {}
+                function toggleControl:Set(newState)
                     state = newState
                     updateToggle(true)
                     callback(state)
                 end
-                return control
+                return toggleControl
             end
 
             return sectionObj
@@ -1466,13 +1468,11 @@ function AppleCatLibrary:CreateWindow(config)
     searchInput:GetPropertyChangedSignal("Text"):Connect(function()
         local query = searchInput.Text:lower()
         for _, tab in ipairs(tabs) do
-            local matched = false
             for _, child in ipairs(tab.ContentFrame:GetChildren()) do
                 if child:IsA("Frame") then
                     local label = child:FindFirstChildOfClass("TextLabel")
                     if label and label.Text:lower():find(query) then
                         child.Visible = true
-                        matched = true
                     elseif child:IsA("Frame") and child.Name ~= "UIListLayout" then
                         child.Visible = false
                     end
