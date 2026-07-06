@@ -130,7 +130,6 @@ local AppleCatLibrary = {
 
 local function GetCorrectImageAsset(assetString)
     if type(assetString) == "string" then
-        -- Kiểm tra nếu chuỗi đầu vào là tên icon viết tắt được lưu trữ trong AppleCatLibrary.Icons
         if AppleCatLibrary.Icons[assetString:lower()] then
             assetString = AppleCatLibrary.Icons[assetString:lower()]
         end
@@ -335,7 +334,7 @@ function AppleCatLibrary:CreateWindow(config)
     local size = config.Size or UDim2.fromOffset(580, 440)
     local defaultTheme = config.Theme or "Dark"
     local logoId = config.Logo or "rbxassetid://124862059676525"
-    local toggleKey = config.ToggleKey or Enum.KeyCode.RightShift -- Phím tắt ẩn/hiện mặc định
+    local toggleKey = config.ToggleKey or Enum.KeyCode.RightShift
     
     AppleCatLibrary.CurrentTheme = defaultTheme
 
@@ -350,11 +349,10 @@ function AppleCatLibrary:CreateWindow(config)
         ResetOnSpawn = false
     })
 
-    -- [TÍNH NĂNG MỚI] Tạo nút nổi bật/tắt (Floating Toggle Button)
     local toggleButton = CreateInstance("ImageButton", {
         Name = "ToggleButton",
         Size = UDim2.fromOffset(50, 50),
-        Position = UDim2.new(0, 20, 0.5, -25), -- Nằm bên trái giữa màn hình làm vị trí khởi tạo
+        Position = UDim2.new(0, 20, 0.5, -25),
         BackgroundColor3 = GetThemeColor("Sidebar"),
         Image = "rbxassetid://124862059676525",
         Visible = true,
@@ -363,7 +361,7 @@ function AppleCatLibrary:CreateWindow(config)
     })
 
     local toggleButtonCorner = CreateInstance("UICorner", {
-        CornerRadius = UDim.new(1, 0), -- Biến nút thành hình tròn
+        CornerRadius = UDim.new(1, 0),
         Parent = toggleButton
     })
 
@@ -374,7 +372,6 @@ function AppleCatLibrary:CreateWindow(config)
         Parent = toggleButton
     })
 
-    -- Giúp nút nổi cũng có thể kéo thả
     MakeDraggable(toggleButton, toggleButton)
 
     local intro = CreateInstance("Frame", {
@@ -563,7 +560,6 @@ function AppleCatLibrary:CreateWindow(config)
         end
     end)
 
-    -- [TÍNH NĂNG MỚI] Hệ thống ẩn/hiện mượt mà (Toggle System)
     local uiVisible = true
     local function ToggleUI()
         uiVisible = not uiVisible
@@ -583,10 +579,8 @@ function AppleCatLibrary:CreateWindow(config)
         end
     end
 
-    -- Gắn sự kiện click vào nút nổi hình tròn
     toggleButton.MouseButton1Click:Connect(ToggleUI)
 
-    -- Hiệu ứng hover cho nút nổi
     toggleButton.MouseEnter:Connect(function()
         PlayTween(toggleButton, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, {
             BackgroundColor3 = GetThemeColor("ElementHover"),
@@ -600,7 +594,6 @@ function AppleCatLibrary:CreateWindow(config)
         })
     end)
 
-    -- Gắn sự kiện phím tắt bàn phím
     UserInputService.InputBegan:Connect(function(input, processed)
         if not processed and input.KeyCode == toggleKey then
             ToggleUI()
@@ -630,13 +623,17 @@ function AppleCatLibrary:CreateWindow(config)
         Parent = searchBoxFrame
     })
 
+    -- [TỐI ƯU CUỘN KHÔNG GIỚI HẠN]: ScrollingFrame chứa danh sách Tab
     local tabListContainer = CreateInstance("ScrollingFrame", {
         Size = UDim2.new(1, 0, 1, -95),
         Position = UDim2.new(0, 0, 0, 85),
         BackgroundTransparency = 1,
         BorderSizePixel = 0,
-        CanvasSize = UDim2.new(0, 0, 0, 0),
-        ScrollBarThickness = 0,
+        CanvasSize = UDim2.new(0, 0, 0, 0), -- Ban đầu đặt bằng 0, sẽ tự động tăng
+        ScrollBarThickness = 2,
+        ScrollBarImageColor3 = GetThemeColor("Border"),
+        AutomaticCanvasSize = Enum.AutomaticCanvasSize.Y, -- Tự động co giãn theo chiều dọc không giới hạn
+        ClipsDescendants = true, -- Chỉ vẽ những phần tử nằm trong tầm nhìn
         Parent = sidebar
     })
 
@@ -666,18 +663,22 @@ function AppleCatLibrary:CreateWindow(config)
 
     function windowObj:CreateTab(tabName, tabIcon)
         tabName = tabName or "Tab"
-        -- [TÍNH NĂNG MỚI] Áp dụng ánh xạ icon tự động qua hàm GetCorrectImageAsset
         tabIcon = tabIcon or "rbxassetid://124862059676525"
 
+        -- [TỐI ƯU CUỘN KHÔNG GIỚI HẠN]: ScrollingFrame của nội dung Tab
         local tabContent = CreateInstance("ScrollingFrame", {
             Name = tabName .. "_Content",
             Size = UDim2.new(1, 0, 1, 0),
             BackgroundTransparency = 1,
             BorderSizePixel = 0,
             Visible = false,
-            CanvasSize = UDim2.new(0, 0, 0, 0),
-            ScrollBarThickness = 3,
+            CanvasSize = UDim2.new(0, 0, 0, 0), -- Sẽ tự động quản lý động bằng mã dưới
+            ScrollBarThickness = 4,
             ScrollBarImageColor3 = GetThemeColor("Border"),
+            AutomaticCanvasSize = Enum.AutomaticCanvasSize.Y, -- Bật tính năng tính toán Canvas tự động không giới hạn
+            ClipsDescendants = true, -- Tối ưu hiệu năng render của Roblox
+            ElasticBehavior = Enum.ElasticBehavior.Always, -- Trải nghiệm cuộn lò xo mượt mà giống như trên di động
+            ScrollingDirection = Enum.ScrollingDirection.Y,
             Parent = contentHolder
         })
 
@@ -694,8 +695,9 @@ function AppleCatLibrary:CreateWindow(config)
             Parent = tabContent
         })
 
+        -- Đảm bảo CanvasSize liên tục cập nhật chính xác theo kích thước thực tế của Layout (Hạn chế tối đa lỗi cuộn lửng lơ)
         contentLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-            tabContent.CanvasSize = UDim2.new(0, 0, 0, contentLayout.AbsoluteContentSize.Y + 20)
+            tabContent.CanvasSize = UDim2.new(0, 0, 0, contentLayout.AbsoluteContentSize.Y + 25)
         end)
 
         local tabBtn = CreateInstance("Frame", {
@@ -717,7 +719,7 @@ function AppleCatLibrary:CreateWindow(config)
             Size = UDim2.fromOffset(16, 16),
             Position = UDim2.new(0, 10, 0.5, -8),
             BackgroundTransparency = 1,
-            Image = tabIcon, -- Sẽ tự động lấy từ Icons dictionary qua CreateInstance
+            Image = tabIcon,
             ImageColor3 = GetThemeColor("TextMuted"),
             Parent = tabBtn
         })
@@ -1074,80 +1076,7 @@ function AppleCatLibrary:CreateWindow(config)
                 return sliderControl
             end
 
-            function sectionObj:CreateTextbox(boxText, placeholder, numericOnly, callback)
-                boxText = boxText or "Nhập liệu"
-                placeholder = placeholder or "Nhập tại đây..."
-                numericOnly = numericOnly or false
-                callback = callback or function() end
-
-                local boxFrame = CreateInstance("Frame", {
-                    Size = UDim2.new(1, 0, 0, 42),
-                    BackgroundColor3 = GetThemeColor("Element"),
-                    Parent = tabContent
-                })
-                CreateInstance("UICorner", { CornerRadius = UDim.new(0, 6), Parent = boxFrame })
-                local stroke = CreateInstance("UIStroke", { Color = GetThemeColor("Border"), Parent = boxFrame })
-
-                local boxLabel = CreateInstance("TextLabel", {
-                    Size = UDim2.new(0.4, 0, 1, 0),
-                    Position = UDim2.new(0, 10, 0, 0),
-                    BackgroundTransparency = 1,
-                    Text = boxText,
-                    TextColor3 = GetThemeColor("Text"),
-                    Font = Enum.Font.GothamMedium,
-                    TextSize = 12,
-                    TextXAlignment = Enum.TextXAlignment.Left,
-                    Parent = boxFrame
-                })
-
-                local inputBg = CreateInstance("Frame", {
-                    Size = UDim2.new(0.5, 0, 0, 26),
-                    Position = UDim2.new(0.5, -10, 0.5, -13),
-                    BackgroundColor3 = GetThemeColor("Background"),
-                    Parent = boxFrame
-                })
-                CreateInstance("UICorner", { CornerRadius = UDim.new(0, 4), Parent = inputBg })
-                local inputStroke = CreateInstance("UIStroke", { Color = GetThemeColor("Border"), Parent = inputBg })
-
-                local boxInput = CreateInstance("TextBox", {
-                    Size = UDim2.new(1, -10, 1, 0),
-                    Position = UDim2.new(0, 5, 0, 0),
-                    BackgroundTransparency = 1,
-                    PlaceholderText = placeholder,
-                    Text = "",
-                    TextColor3 = GetThemeColor("Text"),
-                    PlaceholderColor3 = GetThemeColor("TextMuted"),
-                    Font = Enum.Font.Gotham,
-                    TextSize = 11,
-                    Parent = inputBg
-                })
-
-                boxInput.Focused:Connect(function()
-                    PlayTween(inputStroke, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Color = GetThemeColor("Accent") })
-                    PlayTween(stroke, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Color = GetThemeColor("Accent") })
-                end)
-
-                boxInput.FocusLost:Connect(function(enterPressed)
-                    PlayTween(inputStroke, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Color = GetThemeColor("Border") })
-                    PlayTween(stroke, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Color = GetThemeColor("Border") })
-                    
-                    local text = boxInput.Text
-                    if numericOnly then
-                        local cleanNum = text:gsub("%D", "")
-                        boxInput.Text = cleanNum
-                        text = cleanNum
-                    end
-                    callback(text, enterPressed)
-                end)
-
-                local textboxControl = {}
-                function textboxControl:Set(newText)
-                    boxInput.Text = newText
-                    callback(newText, false)
-                end
-                return textboxControl
-            end
-
+            -- [CẢI TIẾN TỐI ƯU DROPDOWN TRONG DANH SÁCH CUỘN]
             function sectionObj:CreateDropdown(dropText, list, default, callback)
                 dropText = dropText or "Menu lựa chọn"
                 list = list or {}
@@ -1281,6 +1210,80 @@ function AppleCatLibrary:CreateWindow(config)
                     refreshDropdown()
                 end
                 return dropdownControl
+            end
+
+            function sectionObj:CreateTextbox(boxText, placeholder, numericOnly, callback)
+                boxText = boxText or "Nhập liệu"
+                placeholder = placeholder or "Nhập tại đây..."
+                numericOnly = numericOnly or false
+                callback = callback or function() end
+
+                local boxFrame = CreateInstance("Frame", {
+                    Size = UDim2.new(1, 0, 0, 42),
+                    BackgroundColor3 = GetThemeColor("Element"),
+                    Parent = tabContent
+                })
+                CreateInstance("UICorner", { CornerRadius = UDim.new(0, 6), Parent = boxFrame })
+                local stroke = CreateInstance("UIStroke", { Color = GetThemeColor("Border"), Parent = boxFrame })
+
+                local boxLabel = CreateInstance("TextLabel", {
+                    Size = UDim2.new(0.4, 0, 1, 0),
+                    Position = UDim2.new(0, 10, 0, 0),
+                    BackgroundTransparency = 1,
+                    Text = boxText,
+                    TextColor3 = GetThemeColor("Text"),
+                    Font = Enum.Font.GothamMedium,
+                    TextSize = 12,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    Parent = boxFrame
+                })
+
+                local inputBg = CreateInstance("Frame", {
+                    Size = UDim2.new(0.5, 0, 0, 26),
+                    Position = UDim2.new(0.5, -10, 0.5, -13),
+                    BackgroundColor3 = GetThemeColor("Background"),
+                    Parent = boxFrame
+                })
+                CreateInstance("UICorner", { CornerRadius = UDim.new(0, 4), Parent = inputBg })
+                local inputStroke = CreateInstance("UIStroke", { Color = GetThemeColor("Border"), Parent = inputBg })
+
+                local boxInput = CreateInstance("TextBox", {
+                    Size = UDim2.new(1, -10, 1, 0),
+                    Position = UDim2.new(0, 5, 0, 0),
+                    BackgroundTransparency = 1,
+                    PlaceholderText = placeholder,
+                    Text = "",
+                    TextColor3 = GetThemeColor("Text"),
+                    PlaceholderColor3 = GetThemeColor("TextMuted"),
+                    Font = Enum.Font.Gotham,
+                    TextSize = 11,
+                    Parent = inputBg
+                })
+
+                boxInput.Focused:Connect(function()
+                    PlayTween(inputStroke, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Color = GetThemeColor("Accent") })
+                    PlayTween(stroke, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Color = GetThemeColor("Accent") })
+                end)
+
+                boxInput.FocusLost:Connect(function(enterPressed)
+                    PlayTween(inputStroke, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Color = GetThemeColor("Border") })
+                    PlayTween(stroke, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, { Color = GetThemeColor("Border") })
+                    
+                    local text = boxInput.Text
+                    if numericOnly then
+                        local cleanNum = text:gsub("%D", "")
+                        boxInput.Text = cleanNum
+                        text = cleanNum
+                    end
+                    callback(text, enterPressed)
+                end)
+
+                local textboxControl = {}
+                function textboxControl:Set(newText)
+                    boxInput.Text = newText
+                    callback(newText, false)
+                end
+                return textboxControl
             end
 
             function sectionObj:CreateColorpicker(pickerText, default, callback)
@@ -1596,8 +1599,6 @@ function AppleCatLibrary:CreateWindow(config)
             mainBorder.Color = GetThemeColor("Border")
             closeBtn.TextColor3 = GetThemeColor("TextMuted")
             minimizeBtn.TextColor3 = GetThemeColor("TextMuted")
-            
-            -- Cập nhật màu viền/nền cho Nút Toggle nổi theo Theme mới
             toggleButton.BackgroundColor3 = GetThemeColor("Sidebar")
             toggleButtonStroke.Color = GetThemeColor("Accent")
         end
